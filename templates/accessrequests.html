@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div>
+    <h2 class="page-header">Access requests</h2>
+    <table class="table">
+      <thead>
+        <th scope="col">Full name</th>
+        <th scope="col">Organization</th>
+        <th scope="col">Email</th>
+        <th scope="col">Message</th>
+      </thead>
+      <tbody id="users-table">
+      {% for request in requests %}
+        <tr>
+          <th scope="col">{{ request.name }}</th>
+          <th scope="col">{{ request.organization }}</th>
+          <th scope="col">{{ request.email }}</th>
+          <th scope="col">{{ request.message }}</th>
+          <th scope="col">
+            <button type="button" class="btn btn-primary">Create User</button>
+          </th>
+          <th scope="col">
+            <button type="button" class="btn btn-danger" >Deny request</button>
+          </th>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

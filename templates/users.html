@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="page-header">Users</h2>
+    <table class="table">
+      <thead>
+        <th scope="col">Full name</th>
+        <th scope="col">Username</th>
+        <th scope="col">Organization</th>
+        <th scope="col">Actions</th>
+      </thead>
+      <tbody id="users-table">
+      {% for user in users %}
+        <tr>
+          <th scope="col">{{ user.name }}</th>
+          <th scope="col">{{ user.username }}</th>
+          <th scope="col">
+            <button type="button" class="btn btn-primary">Reset password</button>
+          </th>
+          <th scope="col">
+            <button type="button" class="btn btn-danger">Delete</button>
+          </th>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

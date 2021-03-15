@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+      <div class="col-md-9 p-lg-5 mx-auto my-5">
+        <img src="/static/images/logoblack.png" class="center" width="300vw"><br><br>
+        <h1 class="display-4 font-weight-normal">Slice Orchestration Portal</h1>
+        <p class="col-md-9 mx-auto lead font-weight-normal">This is a portal created for managing network slices for the 5G!Drones program. You can create new slices, manage running slices, view KPI information of running and deleted slices</p>
+          {% if not current_user.is_authenticated %}
+          <p class="col-md-7 mx-auto lead font-weight-normal">Please login to manage slices or request access.</p>
+          <a class="btn btn-outline-secondary" href="{{ url_for('login') }}">Login</a><br><br>
+        <a class="btn btn-dark text-light" href="{{ url_for('contact') }}">Request access</a>
+          {% endif %}
+      </div>
+    </div>
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-white">
+      <img src="/static/images/5G-DRONES-logo.jpg" class="center" width="500vw">
+    </div>
+{% endblock %}
