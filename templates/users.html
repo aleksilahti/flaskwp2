@@ -12,18 +12,20 @@
         <th scope="col">Username</th>
         <th scope="col">Organization</th>
         <th scope="col">Actions</th>
+        <th scope="col">Admin</th>
       </thead>
       <tbody id="users-table">
       {% for user in users %}
         <tr>
           <th scope="col">{{ user.name }}</th>
           <th scope="col">{{ user.username }}</th>
+          <th scope="col">{{ user.organization }}</th>
           <th scope="col">
-            <button type="button" class="btn btn-primary">Reset password</button>
+            <a type="button" href="{{ url_for('change_pw', user_id=user.id) }}" class="btn btn-primary">Reset password</a>
+            <a type="button" href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger">Delete user</a>
+            <a type="button" href="{{ url_for('toggle_admin', user_id=user.id) }}" class="btn btn-secondary">Toggle admin</a>
           </th>
-          <th scope="col">
-            <button type="button" class="btn btn-danger">Delete</button>
-          </th>
+          <th scope="col">{{ user.admin }}</th>
         </tr>
     {% endfor %}
       </tbody>

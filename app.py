@@ -130,6 +130,12 @@ class ContactForm(FlaskForm):
         if user:
             raise ValidationError('An account with that email already exists')
 
+class PwForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+
+    submit = SubmitField('Change password')
+
 # Home / Base URL
 @app.route("/", methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
@@ -207,13 +213,7 @@ def newslice():
 @app.route("/profile")
 def profile():
     if current_user.is_authenticated:
-        return render_template('profile.html')
-    return redirect(url_for('login'))
-
-@app.route("/settings")
-def settings():
-    if current_user.is_authenticated:
-        return render_template('settings.html')
+        return render_template('profile.html', user=current_user)
     return redirect(url_for('login'))
 
 @app.route("/users")
@@ -233,6 +233,49 @@ def access_requests():
             requests = Contact.query.all()
             return render_template('accessrequests.html', requests=requests)
         flash('You need admin privileges to access this page!', 'danger')
+        return redirect(url_for('slices'))
+    return redirect(url_for('login'))
+
+@app.route("/deleteuser/<user_id>", methods=["GET", "POST"])
+def delete_user(user_id):
+    if current_user.is_authenticated:
+        if current_user.admin or str(current_user.id) == str(user_id):
+            user = User.query.filter_by(id=user_id).first()
+            db.session.delete(user)
+            db.session.commit()
+            flash('User deleted!', 'success')
+            return redirect(url_for('home'))
+        flash('You lack the credentials to access this page!', 'danger')
+        return redirect(url_for('slices'))
+    return redirect(url_for('login'))
+
+@app.route("/pwchange/<user_id>", methods=["GET", "POST"])
+def change_pw(user_id):
+    if current_user.is_authenticated:
+        if current_user.admin or str(current_user.id) == str(user_id):
+            form = PwForm()
+            user = User.query.filter_by(id=user_id).first()
+            if form.validate_on_submit():
+                # Hash the password and insert the user in SQLAlchemy db
+                hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+                user.pw_hash = hashed_pw
+                db.session.commit()
+                flash('Password changed!', 'success')
+                return redirect(url_for('home'))
+            return render_template('pwchange.html', form=form, user=user)
+        flash('You lack the credentials to access this page!', 'danger')
+        return redirect(url_for('slices'))
+    return redirect(url_for('login'))
+
+@app.route("/toggleadmin/<user_id>", methods=["GET", "POST"])
+def toggle_admin(user_id):
+    if current_user.is_authenticated:
+        if current_user.admin:
+            user = User.query.filter_by(id=user_id).first()
+            user.admin = not user.admin
+            db.session.commit()
+            return redirect(url_for('users'))
+        flash('You lack the credentials to access this page!', 'danger')
         return redirect(url_for('slices'))
     return redirect(url_for('login'))
 

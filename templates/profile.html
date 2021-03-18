@@ -1,8 +1,23 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<h1>Profile</h1>
 {% endblock %}
 
 {% block body %}
+<div class="container">
+  <h2 class="page-header">{{ user.name }}</h2>
+  <div class="container">
+    <ul class="list-group">
+      <li class="list-group-item">Username: {{ user.username }}</li>
+      <li class="list-group-item">Email: {{ user.email }}</li>
+      <li class="list-group-item">Organization: {{ user.organization }}</li>
+      <li scope="col">Admin: {{ user.admin }}</li>
+    </ul>
+  </div>
+  <br>
+  <div class="btn-group">
+    <a type="button" href="{{ url_for('change_pw', user_id=user.id) }}" class="btn btn-primary">Reset password</a>
+    <a type="button" href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger">Delete user</a>
+  </div>
+</div>
 {% endblock %}
